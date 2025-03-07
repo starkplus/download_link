@@ -9,7 +9,7 @@ class FileShareHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html ; charset=utf-8')
             self.end_headers()
-            
+
             html = f"""
             <html>
                 <head>
@@ -37,25 +37,25 @@ class FileShareHandler(BaseHTTPRequestHandler):
             </html>
             """
             self.wfile.write(html.encode())
-            
+
         elif self.path == '/audio.wav':
             # 提供音频文件下载
             try:
                 # 使用绝对路径
                 script_dir = os.path.dirname(os.path.abspath(__file__))
                 file_path = os.path.join(script_dir, 'sample.wav')
-                
+
                 if not os.path.exists(file_path):
                     print(f"错误: 文件不存在 '{file_path}'")
                     self.send_error(404, "File not found")
                     return
-                
+
                 # 获取文件大小
                 file_size = os.path.getsize(file_path)
-                
+
                 with open(file_path, 'rb') as file:
                     content = file.read()
-                    
+
                     self.send_response(200)
                     # 使用通用二进制类型
                     self.send_header('Content-Type', 'application/octet-stream')
@@ -68,7 +68,7 @@ class FileShareHandler(BaseHTTPRequestHandler):
                     self.send_header('Pragma', 'no-cache')
                     self.send_header('Expires', '0')
                     self.end_headers()
-                    
+
                     # 写入文件内容
                     self.wfile.write(content)
                     print(f"成功发送文件: {file_path}, 大小: {file_size} 字节")
@@ -78,7 +78,7 @@ class FileShareHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 print(f"错误: {e}")
                 self.send_error(500, f"Internal server error: {str(e)}")
-                
+
         elif self.path == '/text.txt':
             # 提供文本文件下载
             text_content = "这是要分享的文本信息"
